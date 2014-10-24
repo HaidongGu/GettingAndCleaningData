@@ -79,7 +79,7 @@ this function is to extract more columns from existing long string, for example,
 ```r
 new_col <- extract_feature(feature, c("^t", "^f"), c("Time", "Freq"))) 
 ```
-will get a new vector, new_col, which has the same size as feature, but if feature[i] starts with "t", new_col[i] will be "Time"
+will get a new vector, new_col, which has the same size as feature, but if feature[i] starts with "t", new_col[i] will be "Time", if feature[i] starts with "f", new_col[i] will be "Freq". 
 
 feature                 | new_col                                
 ------------------------|---------------
@@ -165,7 +165,7 @@ dt_result           <-   dt_result[, c("subject", "activity_id", dt_features$fea
 ## ==> Objective 2: [DONE] Extracts only the measurements on the mean and standard deviation for each measurement.
 ```
 
-The data like this now
+The data like this now, (note that after "V6", it is "V41")
 
 ```r
 > tbl_df(dt_result)
@@ -188,7 +188,7 @@ Variables not shown: V46 (dbl), V81 (dbl), V82 (dbl), V83 (dbl), V84 (dbl), V85 
 
 Step 3: Replace activity_id with activity in the main data set
 -------------
-
+Merge the main dataset with dt_activity_labels, and re-select/order the columns
 ```r
 dt_activity_labels  <-      read_table("activity_labels.txt", dir_name)
 setnames(dt_activity_labels, c("V1", "V2"), c("activity_id", "activity"))
@@ -199,7 +199,7 @@ dt_result           <-      dt_result[, c("subject", "activity", dt_features$fea
 ## ==> Objective 3: [DONE] Uses descriptive activity names to name the activities in the data set.
 ```
 
-data likes this 
+data likes this, note that the second column is the activity name, instead of activity id now.
 ```r
 > tbl_df(dt_result)
 Source: local data frame [10,299 x 68]
@@ -236,6 +236,7 @@ Source: local data frame [66 x 3]
 .....................
 ```
 
+use extract_feature to expand the feature dataset with more columns
 ```r
 dt_features <- mutate(dt_features, feature_domain=extract_feature(feature, c("^t", "^f"), c("Time", "Freq")))
 dt_features <- mutate(dt_features, feature_instrument=extract_feature(feature, c("Acc", "Gyro"), c("Accelerometer", "Gyroscope")))

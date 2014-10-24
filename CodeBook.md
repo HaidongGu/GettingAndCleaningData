@@ -9,7 +9,7 @@ Variable list and descriptions
 ------------------------------
 
 Variable name        | Description                                | Range
----------------------|-------------------------------------------------------
+---------------------|--------------------------------------------|----------
 subject              | Subject ID who performed the activity.     | seq(1, 30)
 activity             | Activity name                              | c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING"]
 feature_domain       | Feature: Time signal or frequency signal   | c("Time", "Freq")
