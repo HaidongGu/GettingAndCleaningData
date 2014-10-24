@@ -79,25 +79,24 @@ dt_x                <-   rbind(dt_x_train, dt_x_test)
 
 rm(dt_subject_train, dt_y_train, dt_x_train, dt_subject_test, dt_y_test, dt_x_test)
 
+## rename the columns and merge data with cbind
 setnames(dt_subject, "V1", "subject")
 setnames(dt_y, "V1", "activity_id")
 
-## merge data with cbind
-dt_result          <-      cbind(dt_subject, dt_y, dt_x)
+dt_result          <-    cbind(dt_subject, dt_y, dt_x)
+
 rm(dt_subject, dt_y, dt_x)
 
 ## ==> Objective 1: [DONE] Merges the training and the test sets to create one data set.
 
 
-##  read features.txt, for indexes on mean and standard deviation
+##  read features.txt, and extract rows for mean and standard deviation only
 dt_features         <-      read_table("features.txt", dir_name)
 setnames(dt_features, c("V1", "V2"), c("feature_id", "feature"))
-dt_features         <-      dt_features[grepl("mean\\(\\)|std\\(\\)", feature), ]
-dt_features         <-      mutate(dt_features, feature_vid=paste0("V", feature_id))
+dt_features         <-   dt_features[grepl("mean\\(\\)|std\\(\\)", feature), ]
+dt_features         <-   mutate(dt_features, feature_vid=paste0("V", feature_id))
 
-
-
-dt_result           <-      dt_result[, c("subject", "activity_id", dt_features$feature_vid), with = FALSE]
+dt_result           <-   dt_result[, c("subject", "activity_id", dt_features$feature_vid), with = FALSE]
 
 ## ==> Objective 2: [DONE] Extracts only the measurements on the mean and standard deviation for each measurement.
 
@@ -118,7 +117,6 @@ dt_features <- mutate(dt_features, feature_magnitude=extract_feature(feature, c(
 dt_features <- mutate(dt_features, feature_axis=extract_feature(feature, c("-X", "-Y", "-Z"), c(NA, "X", "Y", "Z")))
 
 dt_result <- gather(dt_result, feature_vid, value, -c(subject, activity))
-
 dt_result <- group_by(dt_result, subject, activity, feature_vid)
 dt_result <- summarise(dt_result, count=n(), average=mean(value))
 
